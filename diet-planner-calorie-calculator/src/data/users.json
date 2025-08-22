@@ -1,0 +1,46 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "age": 30,
+        "gender": "Male",
+        "weight": 70,
+        "height": 175,
+        "activity_level": "Moderately Active",
+        "bmr": 1650,
+        "tdee": 2200
+    },
+    {
+        "id": 2,
+        "name": "Jane Smith",
+        "age": 28,
+        "gender": "Female",
+        "weight": 60,
+        "height": 165,
+        "activity_level": "Lightly Active",
+        "bmr": 1400,
+        "tdee": 1800
+    },
+    {
+        "id": 3,
+        "name": "Alice Johnson",
+        "age": 25,
+        "gender": "Female",
+        "weight": 55,
+        "height": 160,
+        "activity_level": "Active",
+        "bmr": 1350,
+        "tdee": 1900
+    },
+    {
+        "id": 4,
+        "name": "Bob Brown",
+        "age": 35,
+        "gender": "Male",
+        "weight": 85,
+        "height": 180,
+        "activity_level": "Sedentary",
+        "bmr": 1900,
+        "tdee": 2400
+    }
+]
