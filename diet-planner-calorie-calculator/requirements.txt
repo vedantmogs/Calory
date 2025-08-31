@@ -1,5 +1,0 @@
-Tkinter
-matplotlib
-sqlite3
-Pillow
-jsonschema
