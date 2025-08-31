@@ -1,0 +1,115 @@
+import tkinter as tk
+from tkinter import ttk, messagebox, filedialog
+import pandas as pd
+
+# Function to calculate protein, calories, and macros
+def calculate_intake():
+    try:
+        weight = float(weight_entry.get())
+        goal = goal_var.get()
+
+        if goal == "Muscle Gain":
+            protein = weight * 2.0
+            calories = weight * 35
+        elif goal == "Weight Loss":
+            protein = weight * 1.6
+            calories = weight * 25
+        elif goal == "Both":
+            protein = weight * 1.8
+            calories = weight * 30
+        else:
+            protein = weight * 1.2
+            calories = weight * 28
+
+        # Macro breakdown
+        protein_cal = protein * 4
+        fats = (0.25 * calories) / 9
+        carbs = (calories - protein_cal - (fats * 9)) / 4
+
+        result_label.config(
+            text=f"Daily Targets for {goal}:\n"
+                 f"Protein: {protein:.1f} g\n"
+                 f"Carbs: {carbs:.1f} g\n"
+                 f"Fats: {fats:.1f} g\n"
+                 f"Calories: {calories:.0f} kcal"
+        )
+
+        # Store values for exporting
+        global result_data
+        result_data = {
+            "Goal": goal,
+            "Weight (kg)": weight,
+            "Protein (g)": round(protein, 1),
+            "Carbs (g)": round(carbs, 1),
+            "Fats (g)": round(fats, 1),
+            "Calories (kcal)": round(calories, 0)
+        }
+
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Please enter a valid number for weight.")
+
+# Function to export data to Excel
+def export_excel():
+    try:
+        df = pd.DataFrame([result_data])
+        file_path = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel Files", "*.xlsx")])
+        if file_path:
+            df.to_excel(file_path, index=False)
+            messagebox.showinfo("Success", f"Data exported to {file_path}")
+    except Exception as e:
+        messagebox.showerror("Error", "No data to export. Please calculate first.")
+
+# Create main window
+root = tk.Tk()
+root.title("Fitness Planner - Protein & Macros")
+root.geometry("600x450")
+root.resizable(False, False)
+root.configure(bg="#f2f9ff")  # light background
+
+# Styling
+style = ttk.Style(root)
+style.theme_use("clam")
+
+style.configure("TLabel", font=("Segoe UI", 12), background="#f2f9ff", foreground="#333")
+style.configure("TButton", font=("Segoe UI", 11, "bold"), padding=6, relief="flat", background="#4da6ff", foreground="white")
+style.map("TButton", background=[("active", "#1a75ff")])
+style.configure("TCombobox", font=("Segoe UI", 11))
+
+# Title Label
+title_label = ttk.Label(root, text="Fitness Planner - Protein & Macros", font=("Segoe UI", 18, "bold"), background="#f2f9ff")
+title_label.pack(pady=20)
+
+# Weight input frame
+frame = ttk.Frame(root)
+frame.pack(pady=15)
+
+weight_label = ttk.Label(frame, text="Enter your weight (kg): ")
+weight_label.grid(row=0, column=0, padx=8, pady=8)
+
+weight_entry = ttk.Entry(frame, width=12)
+weight_entry.grid(row=0, column=1, padx=8, pady=8)
+
+# Goal selection
+goal_label = ttk.Label(frame, text="Select your goal: ")
+goal_label.grid(row=1, column=0, padx=8, pady=8)
+
+goal_var = tk.StringVar()
+
+goal_dropdown = ttk.Combobox(frame, textvariable=goal_var, state="readonly", width=17)
+goal_dropdown['values'] = ("Muscle Gain", "Weight Loss", "Both")
+goal_dropdown.grid(row=1, column=1, padx=8, pady=8)
+goal_dropdown.current(0)
+
+# Buttons
+calc_button = ttk.Button(root, text="Calculate", command=calculate_intake)
+calc_button.pack(pady=12)
+
+export_button = ttk.Button(root, text="Export to Excel", command=export_excel)
+export_button.pack(pady=8)
+
+# Result Label
+result_label = ttk.Label(root, text="", font=("Segoe UI", 12, "bold"), background="#f2f9ff", foreground="#000080")
+result_label.pack(pady=20)
+
+# Run the app
+root.mainloop()
